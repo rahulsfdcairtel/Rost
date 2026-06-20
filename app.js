@@ -48,6 +48,18 @@
   /* ============================================================
      RENDERING
      ============================================================ */
+  function cartQty(id) { const l = cart.find(i => i.id === id); return l ? l.qty : 0; }
+  function ctaHTML(id) {
+    const q = cartQty(id);
+    if (!q) return `<button class="add-btn" data-add="${id}">Add <span class="plus">+</span></button>`;
+    return `<div class="stepper" data-instep="${id}">
+        <button data-dec="${id}" aria-label="Remove one">−</button>
+        <span class="stepper-qty">${q}<small>in bag</small></span>
+        <button data-inc="${id}" aria-label="Add one">+</button>
+      </div>`;
+  }
+  function updateCardCtas() { $$("[data-cta]").forEach(el => { el.innerHTML = ctaHTML(el.dataset.cta); }); }
+
   function productCard(p) {
     const was = p.was ? `<small>${inr(p.was)}</small>` : "";
     const badge = p.badge ? `<span class="card-badge">${p.badge}</span>` : "";
@@ -64,7 +76,7 @@
         <p class="card-desc">${p.desc}</p>
         <div class="card-foot">
           <span class="card-price">${inr(p.price)} ${was}</span>
-          <button class="add-btn magnetic" data-add="${p.id}">Add <span>+</span></button>
+          <div class="card-cta" data-cta="${p.id}">${ctaHTML(p.id)}</div>
         </div>
       </div>
     </article>`;
@@ -129,10 +141,10 @@
 
   function addToCart(id, btn) {
     const p = PRODUCTS.find(x => x.id === id); if (!p) return;
+    if (btn) burstBeans(btn);
     const line = cart.find(i => i.id === id);
     if (line) line.qty++; else cart.push({ ...p, qty: 1 });
     renderCart();
-    if (btn) burstBeans(btn);
     bounceCount();
     toast(`${p.name} added to bag`);
   }
@@ -172,6 +184,7 @@
         </div>
         <strong>${inr(i.price * i.qty)}</strong>
       </div>`).join("");
+    updateCardCtas();
   }
   function bounceCount() { const c = $("#cartCount"); c.classList.remove("bounce"); void c.offsetWidth; c.classList.add("bounce"); }
 
@@ -189,7 +202,7 @@
   $("#checkoutBtn").onclick = () => {
     if (!cart.length) return;
     if (!user) { closeCart(); openAuth(); toast("Sign in to complete checkout"); return; }
-    toast("Order placed — confirmation on its way ✦");
+    toast(voucherClaimed ? "Order placed — ROST100 (10% off) applied ✦" : "Order placed — confirmation on its way ✦");
     cart = []; renderCart(); closeCart();
   };
 
@@ -449,7 +462,7 @@
     dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%,-50%)`;
   });
   (function ringLoop() {
-    rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18;
+    rx += (mx - rx) * 0.42; ry += (my - ry) * 0.42;
     ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%,-50%)`;
     requestAnimationFrame(ringLoop);
   })();
@@ -471,9 +484,41 @@
   });
 
   /* ============================================================
+     VOUCHER (first visit)
+     ============================================================ */
+  const voucherEl = $("#voucherModal"), voucherCard = $("#voucherCard");
+  let voucherClaimed = false;
+  function showVoucher() { voucherEl.classList.add("show"); voucherEl.setAttribute("aria-hidden", "false"); }
+  function dismissVoucher() {
+    voucherEl.classList.remove("show"); voucherEl.setAttribute("aria-hidden", "true");
+    try { localStorage.setItem("rost-voucher", "seen"); } catch (_) {}
+  }
+  $("#voucherForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const label = $(".btn-label", e.target);
+    if (label) label.classList.add("loading");
+    setTimeout(() => {
+      if (label) label.classList.remove("loading");
+      voucherCard.classList.add("is-flipped");
+      voucherClaimed = true;
+      try { localStorage.setItem("rost-voucher", "claimed"); } catch (_) {}
+    }, 900);
+  });
+  $("#voucherCopy").onclick = () => {
+    const code = $("#voucherCode").textContent.trim();
+    if (navigator.clipboard) navigator.clipboard.writeText(code).catch(() => {});
+    $("#voucherCopy").textContent = "Copied ✓";
+    toast(`Code ${code} copied`);
+  };
+  $("#voucherProceed").onclick = () => { dismissVoucher(); toast("ROST100 saved — 10% off at checkout ✦"); };
+  $("#voucherClose").onclick = dismissVoucher;
+  $("#voucherSkip").onclick = dismissVoucher;
+  voucherEl.addEventListener("click", (e) => { if (e.target === voucherEl) dismissVoucher(); });
+
+  /* ============================================================
      KEYBOARD
      ============================================================ */
-  addEventListener("keydown", (e) => { if (e.key === "Escape") { closeCart(); closeAuth(); closeMenu(); } });
+  addEventListener("keydown", (e) => { if (e.key === "Escape") { closeCart(); closeAuth(); closeMenu(); dismissVoucher(); } });
 
   /* ============================================================
      INIT
@@ -484,4 +529,8 @@
   observeReveals();
   onScroll();
   hideLoader();
+  try { voucherClaimed = localStorage.getItem("rost-voucher") === "claimed"; } catch (_) {}
+  let voucherSeen = true;
+  try { voucherSeen = !!localStorage.getItem("rost-voucher"); } catch (_) { voucherSeen = false; }
+  if (!voucherSeen) setTimeout(showVoucher, 1500);
 })();

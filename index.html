@@ -124,17 +124,17 @@
         <p class="eyebrow center reveal">THREE MOVEMENTS</p>
         <h2 class="center reveal">From peak to bottle</h2>
         <div class="process-grid">
-          <article class="proc reveal">
+          <article class="proc reveal" data-ghost="01">
             <span class="proc-no">01</span>
             <h3>Source</h3>
             <p>Single-origin Arabica, hand-selected from estates above 1,500m. Roasted in micro-lots.</p>
           </article>
-          <article class="proc reveal">
+          <article class="proc reveal" data-ghost="02">
             <span class="proc-no">02</span>
             <h3>Steep</h3>
             <p>Sixteen hours in cold Himalayan spring water. No heat. No rush. No shortcuts.</p>
           </article>
-          <article class="proc reveal">
+          <article class="proc reveal" data-ghost="03">
             <span class="proc-no">03</span>
             <h3>Seal</h3>
             <p>Filtered, nitrogen-flushed and bottled within the hour to lock the moment in glass.</p>
@@ -376,6 +376,38 @@
       <div class="social-row">
         <button class="social-btn" data-social="google">Google</button>
         <button class="social-btn" data-social="apple">Apple</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ VOUCHER (first visit) ============ -->
+  <div class="voucher-wrap" id="voucherModal" aria-hidden="true">
+    <div class="voucher-card" id="voucherCard">
+      <!-- FRONT -->
+      <div class="v-face v-front">
+        <button class="icon-btn v-close" id="voucherClose" aria-label="Close">✕</button>
+        <span class="v-spark">✦</span>
+        <p class="eyebrow center">A WELCOME FROM ROST</p>
+        <h2>Unlock <em>10% off</em><br/>your first brew.</h2>
+        <p class="v-sub">Leave your details and we'll hand you a voucher on the spot — no waiting.</p>
+        <form id="voucherForm">
+          <input type="email" required placeholder="Email address" aria-label="Email" />
+          <input type="tel" required placeholder="Phone number" aria-label="Phone" />
+          <button class="btn btn-primary full" type="submit"><span class="btn-label">Claim my code</span> <span class="arrow">→</span></button>
+        </form>
+        <button class="v-skip" id="voucherSkip">No thanks, I'll pay full price</button>
+      </div>
+      <!-- BACK -->
+      <div class="v-face v-back">
+        <span class="v-spark">✦</span>
+        <p class="eyebrow center">YOU'RE IN</p>
+        <h2>Your code is ready.</h2>
+        <p class="v-sub">Apply it at checkout for 10% off your first order.</p>
+        <div class="code-chip">
+          <span id="voucherCode">ROST100</span>
+          <button class="code-copy" id="voucherCopy">Copy</button>
+        </div>
+        <button class="btn btn-primary full" id="voucherProceed">Start shopping <span class="arrow">→</span></button>
       </div>
     </div>
   </div>

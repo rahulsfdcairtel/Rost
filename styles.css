@@ -199,8 +199,8 @@ em { font-style: italic; color: var(--copper); }
 .hero-cta { display: flex; gap: 14px; flex-wrap: wrap; }
 
 /* ---------- MARQUEE ---------- */
-.marquee { border-block: 1px solid var(--line-soft); padding: 22px 0; overflow: hidden; background: var(--panel); }
-.marquee-track { display: flex; gap: 36px; white-space: nowrap; width: max-content; animation: marq 28s linear infinite; font-family: var(--serif); font-size: clamp(20px, 3vw, 38px); letter-spacing: 0.02em; color: var(--text); }
+.marquee { border-block: 1px solid var(--line-soft); padding: 12px 0; overflow: hidden; background: var(--panel); }
+.marquee-track { display: flex; gap: 26px; white-space: nowrap; width: max-content; animation: marq 30s linear infinite; font-family: var(--mono); font-size: clamp(10px, 1.1vw, 13px); letter-spacing: 0.24em; text-transform: uppercase; color: var(--text-dim); }
 .marquee:hover .marquee-track { animation-play-state: paused; }
 .marquee .sep { color: var(--copper); }
 @keyframes marq { to { transform: translateX(-50%); } }
@@ -219,11 +219,16 @@ em { font-style: italic; color: var(--copper); }
 
 /* ---------- PROCESS ---------- */
 .process-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 54px; }
-.proc { padding: 40px 34px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); position: relative; overflow: hidden; transition: .5s var(--ease); }
+.proc { padding: 44px 34px 40px; border: 1px solid var(--line); border-radius: var(--radius); position: relative; overflow: hidden; transition: .5s var(--ease); background: var(--panel); }
+.proc:nth-child(1) { background: radial-gradient(130% 90% at 0% 0%, rgba(217,138,82,.20), transparent 55%), var(--panel); }
+.proc:nth-child(2) { background: radial-gradient(130% 90% at 100% 0%, rgba(217,138,82,.14), transparent 52%), radial-gradient(120% 80% at 0% 100%, rgba(120,72,36,.14), transparent 55%), var(--panel); }
+.proc:nth-child(3) { background: radial-gradient(140% 100% at 100% 100%, rgba(217,138,82,.22), transparent 58%), var(--panel); }
 .proc::before { content:""; position:absolute; inset:0; background: radial-gradient(120% 80% at 50% 0%, var(--copper-glow), transparent 60%); opacity: 0; transition: opacity .5s; }
-.proc:hover { transform: translateY(-6px); border-color: color-mix(in srgb, var(--copper) 45%, transparent); }
-.proc:hover::before { opacity: .35; }
-.proc-no { font-family: var(--mono); font-size: 13px; color: var(--copper); }
+.proc::after { content: attr(data-ghost); position: absolute; right: 18px; bottom: -22px; font-family: var(--serif); font-size: 130px; line-height: 1; color: var(--text); opacity: .04; pointer-events: none; }
+.proc > * { position: relative; z-index: 1; }
+.proc:hover { transform: translateY(-6px); border-color: color-mix(in srgb, var(--copper) 50%, transparent); box-shadow: 0 30px 70px -40px rgba(0,0,0,.8); }
+.proc:hover::before { opacity: .4; }
+.proc-no { font-family: var(--mono); font-size: 13px; color: var(--copper); letter-spacing: 0.1em; }
 .proc h3 { font-size: 26px; margin: 16px 0 12px; }
 .proc p { color: var(--text-dim); font-size: 0.95rem; }
 
@@ -245,8 +250,17 @@ em { font-style: italic; color: var(--copper); }
 .card-foot { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 14px; }
 .card-price { font-size: 18px; font-weight: 700; }
 .card-price small { color: var(--text-faint); font-weight: 400; font-size: 12px; }
+.card-cta { display: flex; justify-content: flex-end; min-width: 118px; }
 .add-btn { display: inline-flex; align-items: center; gap: 7px; padding: 10px 18px; border-radius: 100px; background: var(--panel-2); border: 1px solid var(--line); font-size: 12px; font-weight: 600; transition: .35s var(--ease); }
 .add-btn:hover { background: var(--copper); color: #fff; border-color: var(--copper); }
+.add-btn .plus { font-size: 15px; line-height: 1; }
+/* Dynamic stepper */
+.stepper { display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--copper); border-radius: 100px; padding: 4px; background: color-mix(in srgb, var(--copper) 12%, transparent); animation: stepPop .3s var(--ease); }
+@keyframes stepPop { from { transform: scale(.82); opacity: .3; } to { transform: scale(1); opacity: 1; } }
+.stepper button { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-size: 17px; color: var(--copper); transition: .25s var(--ease); }
+.stepper button:hover { background: var(--copper); color: #fff; }
+.stepper-qty { display: flex; flex-direction: column; align-items: center; line-height: 1; min-width: 34px; font-weight: 700; font-size: 15px; color: var(--text); }
+.stepper-qty small { font-size: 7px; font-weight: 600; letter-spacing: 0.1em; color: var(--copper); text-transform: uppercase; margin-top: 3px; }
 
 /* ---------- QUOTE ---------- */
 .quote { text-align: center; max-width: 1000px; margin: 0 auto; }
@@ -440,6 +454,30 @@ em { font-style: italic; color: var(--copper); }
 .social-btn:hover { border-color: var(--copper); color: var(--copper); }
 .btn-label.loading { color: transparent; position: relative; }
 .btn-label.loading::after { content:""; position:absolute; left:50%; top:50%; width:16px; height:16px; margin:-8px 0 0 -8px; border:2px solid rgba(255,255,255,.4); border-top-color:#fff; border-radius:50%; animation: spin .7s linear infinite; }
+
+/* ---------- VOUCHER (flip) ---------- */
+.voucher-wrap { position: fixed; inset: 0; z-index: 9800; display: grid; place-items: center; padding: 22px; perspective: 1600px; background: rgba(0,0,0,.72); backdrop-filter: blur(8px); opacity: 0; visibility: hidden; transition: .5s var(--ease); }
+.voucher-wrap.show { opacity: 1; visibility: visible; }
+.voucher-card { width: min(440px, 100%); min-height: 500px; position: relative; transform-style: preserve-3d; transition: transform 1s var(--ease); transform: rotateY(0deg) translateY(18px) scale(.97); }
+.voucher-wrap.show .voucher-card { transform: rotateY(0deg) translateY(0) scale(1); }
+.voucher-card.is-flipped { transform: rotateY(180deg); }
+.v-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; background: var(--ink-2); border: 1px solid var(--line); border-radius: var(--radius-l); padding: 48px 38px; display: flex; flex-direction: column; justify-content: center; text-align: center; overflow: hidden; }
+.v-back { transform: rotateY(180deg); }
+.v-face::before { content: ""; position: absolute; top: -45%; left: 50%; width: 150%; height: 130%; transform: translateX(-50%); background: radial-gradient(circle, var(--copper-glow), transparent 60%); opacity: .4; pointer-events: none; }
+.v-face > * { position: relative; }
+.v-spark { color: var(--copper); font-size: 22px; margin-bottom: 12px; }
+.v-face h2 { font-size: clamp(28px, 5vw, 40px); margin-bottom: 14px; }
+.v-sub { color: var(--text-dim); font-size: 0.92rem; margin-bottom: 24px; max-width: 32ch; margin-inline: auto; }
+#voucherForm { display: flex; flex-direction: column; gap: 12px; }
+#voucherForm input { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-s); padding: 14px 16px; color: var(--text); font-family: inherit; transition: border-color .3s; }
+#voucherForm input:focus { outline: none; border-color: var(--copper); }
+.v-skip { margin-top: 16px; font-size: 12px; color: var(--text-faint); transition: color .3s; }
+.v-skip:hover { color: var(--text); }
+.v-close { position: absolute; top: 14px; right: 14px; z-index: 2; }
+.code-chip { display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 1px dashed var(--copper); border-radius: var(--radius); padding: 16px 14px 16px 22px; margin-bottom: 24px; background: color-mix(in srgb, var(--copper) 10%, transparent); }
+.code-chip span { font-family: var(--mono); font-size: clamp(22px, 4vw, 30px); letter-spacing: 0.14em; color: var(--copper); }
+.code-copy { font-size: 12px; font-weight: 600; border: 1px solid var(--line); padding: 9px 16px; border-radius: 100px; transition: .3s var(--ease); white-space: nowrap; }
+.code-copy:hover { background: var(--copper); color: #fff; border-color: var(--copper); }
 
 /* ---------- TOASTS ---------- */
 .toasts { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%); z-index: 10002; display: flex; flex-direction: column; gap: 10px; align-items: center; }
