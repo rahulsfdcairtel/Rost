@@ -72,7 +72,7 @@ button { font-family: inherit; cursor: none; color: inherit; background: none; b
 a { color: inherit; text-decoration: none; cursor: none; }
 ::selection { background: var(--copper); color: #fff; }
 
-h1, h2, h3, h4 { font-family: var(--serif); font-weight: 500; line-height: 1.1; letter-spacing: -0.01em; }
+h1, h2, h3, h4 { font-family: var(--serif); font-weight: 500; line-height: 1.05; letter-spacing: -0.01em; }
 em { font-style: italic; color: var(--copper); }
 
 /* ---------- ATMOSPHERE OVERLAYS ---------- */
@@ -190,8 +190,8 @@ em { font-style: italic; color: var(--copper); }
   background-image: linear-gradient(var(--line-soft) 1px, transparent 1px), linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
   background-size: 64px 64px; mask-image: radial-gradient(70% 70% at 30% 50%, #000, transparent); }
 .hero-content { position: relative; z-index: 2; max-width: 720px; }
-.hero-title { font-size: clamp(42px, 7.4vw, 100px); line-height: 1.08; margin: 10px 0 28px; }
-.hero-title .line { display: block; overflow: visible; padding-bottom: 0.06em; }
+.hero-title { font-size: clamp(38px, 6.3vw, 84px); line-height: 0.98; margin: 10px 0 26px; }
+.hero-title .line { display: block; overflow: visible; padding-bottom: 0.04em; }
 .hero-title .ul { position: relative; white-space: nowrap; }
 .hero-title .ul::after { content:""; position:absolute; left:0; right:0; bottom: 0; height: 0.06em; background: var(--copper); transform: scaleX(0); transform-origin: left; animation: ul 1s var(--ease) 1.4s forwards; }
 @keyframes ul { to { transform: scaleX(1); } }
