@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="ROST.coffee — Artisanal cold brew, slow-steeped at altitude. Born on Hatu Peak." />
+  <title>ROST.coffee — Cold Brew, Perfected</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Manrope:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Film grain + glow overlays -->
+  <div class="grain" aria-hidden="true"></div>
+  <div class="aurora" aria-hidden="true"></div>
+
+  <!-- Scroll progress -->
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+  <!-- Custom cursor -->
+  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+  <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+  <!-- Brewing loader -->
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="loader-mark">
+      <span class="loader-ring"></span>
+      <span class="loader-glyph">R</span>
+    </div>
+    <p class="loader-text">B R E W I N G</p>
+  </div>
+
+  <!-- ============ NAV ============ -->
+  <header class="nav" id="nav">
+    <div class="nav-inner">
+      <a class="brand" data-nav="home" href="#home" aria-label="ROST.coffee home">
+        <span class="brand-glyph">R</span>
+        <span class="brand-word">ROST<span class="brand-dot">.coffee</span></span>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a data-nav="home" class="nav-link is-active" href="#home">Home</a>
+        <a data-nav="products" class="nav-link" href="#products">Collection</a>
+        <a data-nav="founders" class="nav-link" href="#founders">Founders</a>
+        <a data-nav="account" class="nav-link" href="#account">Account</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="icon-btn" id="themeToggle" aria-label="Toggle theme" data-tip="Theme">
+          <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" fill="currentColor"/></svg>
+          <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="4" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19"/></g></svg>
+        </button>
+        <button class="icon-btn" id="accountBtn" aria-label="Account" data-tip="Sign in">
+          <svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M4 21a8 8 0 0 1 16 0" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
+        <button class="icon-btn cart-btn" id="cartBtn" aria-label="Cart" data-tip="Cart">
+          <svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 7h12l-1 13H7L6 7Z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M9 7a3 3 0 0 1 6 0" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+          <span class="cart-count" id="cartCount">0</span>
+        </button>
+        <button class="burger" id="burger" aria-label="Menu"><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="app">
+
+    <!-- ==================== HOME ==================== -->
+    <section class="page is-active" id="page-home">
+      <!-- HERO -->
+      <div class="hero">
+        <div class="hero-bg" id="heroBg">
+          <img src="assets/hero-bottle.png" alt="ROST signature cold brew bottle" />
+        </div>
+        <div class="hero-grid" aria-hidden="true"></div>
+        <div class="hero-content">
+          <p class="eyebrow reveal">SLOW-STEEPED · SMALL BATCH · ALTITUDE 11,152 FT</p>
+          <h1 class="hero-title">
+            <span class="line reveal">Cold brew,</span>
+            <span class="line reveal"><em>engineered</em> for the</span>
+            <span class="line reveal">few who <span class="ul">notice.</span></span>
+          </h1>
+          <p class="hero-sub reveal">Born on Hatu Peak. Steeped sixteen hours in Himalayan spring water. A coffee that behaves like a single malt.</p>
+          <div class="hero-cta reveal">
+            <button class="btn btn-primary magnetic" data-nav="products">Explore the Collection <span class="arrow">→</span></button>
+            <button class="btn btn-ghost magnetic" data-nav="founders">Our Story</button>
+          </div>
+        </div>
+        <div class="hero-scroll reveal"><span></span>scroll</div>
+      </div>
+
+      <!-- MARQUEE -->
+      <div class="marquee" aria-hidden="true">
+        <div class="marquee-track">
+          <span>SIXTEEN HOUR STEEP</span><span class="sep">✦</span>
+          <span>HIMALAYAN SPRING WATER</span><span class="sep">✦</span>
+          <span>SINGLE ORIGIN</span><span class="sep">✦</span>
+          <span>ZERO COMPROMISE</span><span class="sep">✦</span>
+          <span>SIXTEEN HOUR STEEP</span><span class="sep">✦</span>
+          <span>HIMALAYAN SPRING WATER</span><span class="sep">✦</span>
+          <span>SINGLE ORIGIN</span><span class="sep">✦</span>
+          <span>ZERO COMPROMISE</span><span class="sep">✦</span>
+        </div>
+      </div>
+
+      <!-- CRAFT / STATS -->
+      <section class="craft section">
+        <div class="craft-media reveal">
+          <img src="assets/craft-macro.png" alt="Cold brew poured over ice" />
+          <div class="craft-badge">EST. 2021</div>
+        </div>
+        <div class="craft-copy">
+          <p class="eyebrow reveal">THE ROST METHOD</p>
+          <h2 class="reveal">We didn't reinvent coffee. <em>We slowed it down.</em></h2>
+          <p class="lede reveal">Hot extraction is violent. We let time do the work — a sixteen-hour cold steep that pulls sweetness and chocolate while leaving the bitterness behind. The result is impossibly smooth, with none of the acidity.</p>
+          <div class="stats">
+            <div class="stat reveal"><span class="num" data-count="16" data-suffix="h">0</span><span class="lbl">Cold steep</span></div>
+            <div class="stat reveal"><span class="num" data-count="100" data-suffix="%">0</span><span class="lbl">Arabica</span></div>
+            <div class="stat reveal"><span class="num" data-count="0" data-suffix="" data-text="∅">0</span><span class="lbl">Additives</span></div>
+            <div class="stat reveal"><span class="num" data-count="3" data-suffix="" >0</span><span class="lbl">Founders</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROCESS STRIP -->
+      <section class="process section">
+        <p class="eyebrow center reveal">THREE MOVEMENTS</p>
+        <h2 class="center reveal">From peak to bottle</h2>
+        <div class="process-grid">
+          <article class="proc reveal">
+            <span class="proc-no">01</span>
+            <h3>Source</h3>
+            <p>Single-origin Arabica, hand-selected from estates above 1,500m. Roasted in micro-lots.</p>
+          </article>
+          <article class="proc reveal">
+            <span class="proc-no">02</span>
+            <h3>Steep</h3>
+            <p>Sixteen hours in cold Himalayan spring water. No heat. No rush. No shortcuts.</p>
+          </article>
+          <article class="proc reveal">
+            <span class="proc-no">03</span>
+            <h3>Seal</h3>
+            <p>Filtered, nitrogen-flushed and bottled within the hour to lock the moment in glass.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- PRODUCT GRID -->
+      <section class="section showcase" id="featured">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow reveal">THE COLLECTION</p>
+            <h2 class="reveal">Four expressions. One obsession.</h2>
+          </div>
+          <button class="btn btn-line magnetic" data-nav="products">View all <span class="arrow">→</span></button>
+        </div>
+        <div class="product-grid" id="homeGrid"></div>
+      </section>
+
+      <!-- QUOTE -->
+      <section class="quote section reveal">
+        <p>“The best cold brew we'd ever had didn't exist yet. So we built it.”</p>
+        <span>— Rahul, Sam &amp; Anurag</span>
+      </section>
+
+      <!-- NEWSLETTER -->
+      <section class="news section">
+        <div class="news-inner reveal">
+          <h2>Join the inner circle.</h2>
+          <p>Early drops, founder notes and ₹500 off your first case. No noise.</p>
+          <form class="news-form" id="newsForm">
+            <input type="email" required placeholder="your@email.com" aria-label="Email" />
+            <button class="btn btn-primary" type="submit">Subscribe <span class="arrow">→</span></button>
+          </form>
+        </div>
+      </section>
+    </section>
+
+    <!-- ==================== PRODUCTS ==================== -->
+    <section class="page" id="page-products">
+      <div class="page-hero">
+        <p class="eyebrow reveal">THE FULL COLLECTION</p>
+        <h1 class="reveal">Every bottle, a small rebellion.</h1>
+        <p class="page-hero-sub reveal">Steeped slow, bottled fresh, priced for the people who actually taste the difference.</p>
+      </div>
+      <div class="filter-bar reveal" id="filterBar">
+        <button class="chip is-active" data-filter="all">All</button>
+        <button class="chip" data-filter="signature">Signature</button>
+        <button class="chip" data-filter="flavoured">Flavoured</button>
+        <button class="chip" data-filter="bundle">Bundles</button>
+      </div>
+      <div class="product-grid wide" id="catalogGrid"></div>
+    </section>
+
+    <!-- ==================== FOUNDERS ==================== -->
+    <section class="page" id="page-founders">
+      <div class="founders-hero">
+        <div class="founders-hero-bg"><img src="assets/founders-group.png" alt="The three founders on Hatu Peak" /></div>
+        <div class="founders-hero-copy">
+          <p class="eyebrow reveal">HATU PEAK · 11,152 FT</p>
+          <h1 class="reveal">Three friends.<br/>One bad cup of coffee.</h1>
+          <p class="reveal">In 2021, Rahul, Sam and Anurag hiked to Hatu Peak in Himachal Pradesh — and were handed the worst cold brew of their lives at the top of the world. They came down with a recipe instead of a souvenir.</p>
+        </div>
+      </div>
+
+      <section class="section founders-cards">
+        <p class="eyebrow center reveal">THE PEOPLE</p>
+        <h2 class="center reveal">Who is ROST</h2>
+        <div class="founder-grid" id="founderGrid"></div>
+      </section>
+
+      <section class="section principles">
+        <p class="eyebrow center reveal">THREE PRINCIPLES</p>
+        <h2 class="center reveal">What we refuse to bend on</h2>
+        <div class="principle-grid">
+          <div class="principle reveal"><span class="p-no">I</span><h3>Time over speed</h3><p>If it can be rushed, it isn't ours. Sixteen hours, every batch, no exceptions.</p></div>
+          <div class="principle reveal"><span class="p-no">II</span><h3>Source over scale</h3><p>We'd rather sell out than dilute. Micro-lots, real estates, named farmers.</p></div>
+          <div class="principle reveal"><span class="p-no">III</span><h3>Honesty over hype</h3><p>Nothing on the label you can't pronounce. Coffee, water, time. That's it.</p></div>
+        </div>
+      </section>
+
+      <section class="section timeline-section">
+        <p class="eyebrow center reveal">THE CLIMB</p>
+        <h2 class="center reveal">From a peak to a brand</h2>
+        <div class="timeline" id="timeline"></div>
+      </section>
+
+      <section class="cta-band section reveal">
+        <h2>Taste what a bad cup of coffee started.</h2>
+        <button class="btn btn-primary magnetic" data-nav="products">Shop the collection <span class="arrow">→</span></button>
+      </section>
+    </section>
+
+    <!-- ==================== ACCOUNT ==================== -->
+    <section class="page" id="page-account">
+      <div class="account-shell">
+        <aside class="account-side reveal">
+          <div class="account-avatar"><span id="avatarInitial">R</span></div>
+          <h3 id="accountName">Guest</h3>
+          <p id="accountEmail" class="muted">Not signed in</p>
+          <nav class="account-nav">
+            <button class="acc-tab is-active" data-tab="profile">Profile</button>
+            <button class="acc-tab" data-tab="orders">Orders</button>
+            <button class="acc-tab" data-tab="subs">Subscription</button>
+            <button class="acc-tab" data-tab="settings">Settings</button>
+          </nav>
+          <button class="btn btn-line full" id="signOutBtn" hidden>Sign out</button>
+        </aside>
+
+        <div class="account-main">
+          <!-- PROFILE -->
+          <div class="acc-panel is-active" data-panel="profile">
+            <div class="acc-locked" id="accLocked">
+              <h2>Your private cellar awaits.</h2>
+              <p>Sign in to view orders, manage your subscription and track every shipment.</p>
+              <button class="btn btn-primary magnetic" id="lockedSignIn">Sign in <span class="arrow">→</span></button>
+            </div>
+            <div id="accUnlocked" hidden>
+              <h2 class="panel-title">Profile</h2>
+              <div class="info-grid">
+                <div class="info"><span class="k">Full name</span><span class="v" id="pName">—</span></div>
+                <div class="info"><span class="k">Email</span><span class="v" id="pEmail">—</span></div>
+                <div class="info"><span class="k">Member since</span><span class="v">June 2024</span></div>
+                <div class="info"><span class="k">Tier</span><span class="v tier">Founders' Reserve</span></div>
+              </div>
+              <h3 class="sub-title">Default shipping</h3>
+              <div class="addr-card">
+                <p><strong>Rahul Sharma</strong></p>
+                <p>42 Banjara Hills, Road No. 12<br/>Hyderabad, Telangana 500034</p>
+                <p>India · +91 98765 43210</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ORDERS -->
+          <div class="acc-panel" data-panel="orders">
+            <h2 class="panel-title">Order history</h2>
+            <div class="orders" id="ordersList"></div>
+          </div>
+
+          <!-- SUBSCRIPTION -->
+          <div class="acc-panel" data-panel="subs">
+            <h2 class="panel-title">Subscription</h2>
+            <div class="sub-card">
+              <div class="sub-top">
+                <span class="badge live">ACTIVE</span>
+                <span class="sub-plan">Monthly · Signature Case ×6</span>
+              </div>
+              <div class="sub-meta">
+                <div><span class="k">Next shipment</span><span class="v">12 July 2026</span></div>
+                <div><span class="k">Price</span><span class="v">₹2,499 / mo</span></div>
+                <div><span class="k">Saved vs retail</span><span class="v hl">₹4,188 / yr</span></div>
+              </div>
+              <div class="sub-actions">
+                <button class="btn btn-line">Pause</button>
+                <button class="btn btn-line">Change plan</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- SETTINGS -->
+          <div class="acc-panel" data-panel="settings">
+            <h2 class="panel-title">Settings</h2>
+            <div class="setting-row"><div><strong>Email notifications</strong><p class="muted">Order updates &amp; drops</p></div><label class="switch"><input type="checkbox" checked><span></span></label></div>
+            <div class="setting-row"><div><strong>SMS / WhatsApp</strong><p class="muted">Delivery alerts</p></div><label class="switch"><input type="checkbox" checked><span></span></label></div>
+            <div class="setting-row"><div><strong>Founder notes</strong><p class="muted">The monthly long read</p></div><label class="switch"><input type="checkbox"><span></span></label></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="brand-word big">ROST<span class="brand-dot">.coffee</span></span>
+        <p>Cold brew, perfected at altitude. Crafted in India, for the world.</p>
+      </div>
+      <div class="footer-cols">
+        <div><h4>Shop</h4><a data-nav="products">Collection</a><a data-nav="products">Bundles</a><a data-nav="account">Subscription</a></div>
+        <div><h4>Brand</h4><a data-nav="founders">Founders</a><a data-nav="founders">The Method</a><a data-nav="home">Journal</a></div>
+        <div><h4>Support</h4><a href="#">Shipping</a><a href="#">Contact</a><a href="#">FAQ</a></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 ROST.coffee — Made on Hatu Peak.</span>
+      <span class="footer-socials"><a href="#">Instagram</a><a href="#">X</a><a href="#">LinkedIn</a></span>
+    </div>
+  </footer>
+
+  <!-- ============ CART ============ -->
+  <div class="overlay" id="overlay"></div>
+  <aside class="cart" id="cart" aria-hidden="true">
+    <div class="cart-head">
+      <h3>Your bag</h3>
+      <button class="icon-btn" id="cartClose" aria-label="Close cart">✕</button>
+    </div>
+    <div class="ship-bar">
+      <div class="ship-fill" id="shipFill"></div>
+    </div>
+    <p class="ship-msg" id="shipMsg">Add ₹2,999 for free shipping</p>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-empty" id="cartEmpty">
+      <p>Your bag is empty.</p>
+      <button class="btn btn-line" data-nav="products" id="cartShop">Browse the collection</button>
+    </div>
+    <div class="cart-foot" id="cartFoot">
+      <div class="cart-line"><span>Subtotal</span><span id="cartSubtotal">₹0</span></div>
+      <button class="btn btn-primary full" id="checkoutBtn">Checkout <span class="arrow">→</span></button>
+    </div>
+  </aside>
+
+  <!-- ============ AUTH MODAL ============ -->
+  <div class="modal-wrap" id="authModal" aria-hidden="true">
+    <div class="modal">
+      <button class="icon-btn modal-close" id="authClose" aria-label="Close">✕</button>
+      <div class="modal-mark"><span class="brand-glyph">R</span></div>
+      <h2 class="modal-title">Welcome to ROST</h2>
+      <p class="modal-sub">Sign in to your private cellar.</p>
+      <div class="auth-tabs">
+        <button class="auth-tab is-active" data-auth="email">Email</button>
+        <button class="auth-tab" data-auth="phone">Phone</button>
+      </div>
+      <form class="auth-form is-active" data-form="email" id="emailForm">
+        <label>Email<input type="email" required placeholder="you@email.com" /></label>
+        <label>Password<input type="password" required placeholder="••••••••" /></label>
+        <button class="btn btn-primary full" type="submit"><span class="btn-label">Sign in</span></button>
+      </form>
+      <form class="auth-form" data-form="phone" id="phoneForm">
+        <label>Phone<input type="tel" required placeholder="+91 98765 43210" /></label>
+        <div class="otp-row" id="otpRow" hidden>
+          <label>Enter OTP<input type="text" inputmode="numeric" maxlength="6" placeholder="6-digit code" /></label>
+        </div>
+        <button class="btn btn-primary full" type="submit"><span class="btn-label">Send OTP</span></button>
+      </form>
+      <div class="auth-divider"><span>or continue with</span></div>
+      <div class="social-row">
+        <button class="social-btn" data-social="google">Google</button>
+        <button class="social-btn" data-social="apple">Apple</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toasts -->
+  <div class="toasts" id="toasts"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
