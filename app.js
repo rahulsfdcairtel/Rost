@@ -7,6 +7,11 @@
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
   const inr = (n) => "₹" + n.toLocaleString("en-IN");
 
+  /* Failsafe: always dismiss the loader, even if later init throws. */
+  const hideLoader = () => { const l = document.getElementById("loader"); if (l) l.classList.add("is-done"); };
+  setTimeout(hideLoader, 1500);
+  window.addEventListener("load", () => setTimeout(hideLoader, 400));
+
   /* ---------- DATA ---------- */
   const PRODUCTS = [
     { id: "p1", name: "Signature Black", origin: "Chikmagalur, IN", cat: "signature", price: 449, was: 549, badge: "Bestseller", img: "assets/hero-bottle.png", desc: "The original. 16-hour steep, chocolate & cane sugar finish." },
@@ -111,8 +116,7 @@
     const nav = e.target.closest("[data-nav]");
     if (nav) { e.preventDefault(); go(nav.dataset.nav); }
   });
-  const startPage = (location.hash || "#home").slice(1);
-  if (["home","products","founders","account"].includes(startPage)) go(startPage);
+  // Initial route is applied in INIT (after all sections are defined).
 
   /* ============================================================
      CART
@@ -474,12 +478,10 @@
   /* ============================================================
      INIT
      ============================================================ */
+  const startPage = (location.hash || "#home").slice(1);
+  if (["home","products","founders","account"].includes(startPage)) go(startPage);
   renderCart();
   observeReveals();
   onScroll();
-  addEventListener("load", () => {
-    setTimeout(() => $("#loader").classList.add("is-done"), 600);
-  });
-  // Fallback if load already fired
-  setTimeout(() => $("#loader").classList.add("is-done"), 2200);
+  hideLoader();
 })();
