@@ -3,8 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; media-src 'self' https://videos.pexels.com; script-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta name="color-scheme" content="dark light" />
   <meta name="description" content="ROST.coffee — Artisanal cold brew, slow-steeped at altitude. Born on Hatu Peak." />
   <title>ROST.coffee — Cold Brew, Perfected</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2308070a'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='20' fill='%23d98a52' text-anchor='middle'%3ER%3C/text%3E%3C/svg%3E" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ROST.coffee — Cold Brew, Perfected" />
+  <meta property="og:description" content="Artisanal cold brew, slow-steeped sixteen hours at altitude. Born on Hatu Peak." />
+  <meta name="twitter:card" content="summary_large_image" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Manrope:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -100,6 +108,26 @@
         </div>
       </div>
 
+      <!-- TRUST STRIP -->
+      <section class="trust-strip" aria-label="Why shop with ROST">
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="7" cy="17" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="17" cy="17" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+          <div><strong>Free shipping</strong><span>On orders over ₹2,999</span></div>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <div><strong>2–4 day delivery</strong><span>Fresh, across India</span></div>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M9 12l2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div><strong>Secure checkout</strong><span>UPI · Cards · COD</span></div>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M21 4v4h-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div><strong>7-day returns</strong><span>Hassle-free, no questions</span></div>
+        </div>
+      </section>
+
       <!-- CRAFT / STATS -->
       <section class="craft section">
         <div class="craft-media reveal">
@@ -163,6 +191,21 @@
         <span>— Rahul, Sam &amp; Anurag</span>
       </section>
 
+      <!-- REVIEWS / SOCIAL PROOF -->
+      <section class="section reviews">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow reveal">FROM THE PEOPLE WHO NOTICE</p>
+            <h2 class="reveal">Rated 4.9 by 2,400+ drinkers</h2>
+          </div>
+          <div class="rating-summary reveal">
+            <span class="rs-stars" id="rsStars" aria-hidden="true"></span>
+            <span class="rs-meta">4.9 / 5 · 2,418 verified reviews</span>
+          </div>
+        </div>
+        <div class="review-grid" id="reviewGrid"></div>
+      </section>
+
       <!-- NEWSLETTER -->
       <section class="news section">
         <div class="news-inner reveal">
@@ -183,13 +226,35 @@
         <h1 class="reveal">Every bottle, a small rebellion.</h1>
         <p class="page-hero-sub reveal">Steeped slow, bottled fresh, priced for the people who actually taste the difference.</p>
       </div>
+      <div class="catalog-tools reveal">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m20 20-3.2-3.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <input type="search" id="catalogSearch" placeholder="Search the collection…" aria-label="Search products" autocomplete="off" maxlength="60" />
+          <button type="button" class="search-clear" id="searchClear" aria-label="Clear search" hidden>✕</button>
+        </div>
+        <label class="sort-box">
+          <span class="sr-only">Sort by</span>
+          <select id="catalogSort" aria-label="Sort products">
+            <option value="featured">Featured</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="rating">Top rated</option>
+            <option value="name">Name: A–Z</option>
+          </select>
+        </label>
+      </div>
       <div class="filter-bar reveal" id="filterBar">
         <button class="chip is-active" data-filter="all">All</button>
         <button class="chip" data-filter="signature">Signature</button>
         <button class="chip" data-filter="flavoured">Flavoured</button>
         <button class="chip" data-filter="bundle">Bundles</button>
       </div>
+      <p class="catalog-count" id="catalogCount" aria-live="polite"></p>
       <div class="product-grid wide" id="catalogGrid"></div>
+      <div class="catalog-empty" id="catalogEmpty" hidden>
+        <p>No brews match that search.</p>
+        <button class="btn btn-line" id="catalogReset">Clear filters</button>
+      </div>
     </section>
 
     <!-- ==================== FOUNDERS ==================== -->
@@ -341,6 +406,11 @@
       <div class="ship-fill" id="shipFill"></div>
     </div>
     <p class="ship-msg" id="shipMsg">Add ₹2,999 for free shipping</p>
+    <form class="pincode" id="pincodeForm" novalidate>
+      <input type="text" id="pincodeInput" inputmode="numeric" maxlength="6" placeholder="Delivery pincode" aria-label="Delivery pincode" autocomplete="postal-code" />
+      <button class="btn btn-line" type="submit">Check</button>
+    </form>
+    <p class="pincode-msg" id="pincodeMsg" aria-live="polite"></p>
     <div class="cart-items" id="cartItems"></div>
     <div class="cart-empty" id="cartEmpty">
       <p>Your bag is empty.</p>
@@ -383,6 +453,30 @@
     </div>
   </div>
 
+  <!-- ============ QUICK VIEW ============ -->
+  <div class="quick-wrap" id="quickModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="qvName">
+    <div class="quick">
+      <button class="icon-btn quick-close" id="quickClose" aria-label="Close">✕</button>
+      <div class="quick-media">
+        <span class="card-badge" id="qvBadge" hidden></span>
+        <img id="qvImg" src="" alt="" />
+      </div>
+      <div class="quick-body">
+        <span class="card-origin" id="qvOrigin"></span>
+        <h2 class="quick-name" id="qvName"></h2>
+        <div class="quick-rate"><span class="stars" id="qvStars" aria-hidden="true"></span><span id="qvReviews" class="quick-reviews"></span></div>
+        <p class="quick-desc" id="qvDesc"></p>
+        <ul class="quick-notes" id="qvNotes"></ul>
+        <div class="quick-specs" id="qvSpecs"></div>
+        <div class="quick-foot">
+          <span class="quick-price" id="qvPrice"></span>
+          <div class="quick-cta" id="qvCta"></div>
+        </div>
+        <p class="quick-ship">✦ Free shipping over ₹2,999 · Ships fresh in 2–4 days</p>
+      </div>
+    </div>
+  </div>
+
   <!-- ============ VOUCHER (first visit) ============ -->
   <div class="voucher-wrap" id="voucherModal" aria-hidden="true">
     <div class="voucher-card" id="voucherCard">
@@ -407,7 +501,7 @@
         <h2>Your code is ready.</h2>
         <p class="v-sub">Apply it at checkout for 10% off your first order.</p>
         <div class="code-chip">
-          <span id="voucherCode">ROST100</span>
+          <span id="voucherCode">••••••</span>
           <button class="code-copy" id="voucherCopy">Copy</button>
         </div>
         <button class="btn btn-primary full" id="voucherProceed">Start shopping <span class="arrow">→</span></button>
