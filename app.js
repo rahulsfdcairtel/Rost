@@ -6,6 +6,16 @@
   const $ = (s, c = document) => c.querySelector(s);
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
   const inr = (n) => "₹" + n.toLocaleString("en-IN");
+  /* Escape any string before it touches innerHTML — defends against
+     stored/derived content ever carrying markup (XSS-safe rendering). */
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => (
+    { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]
+  ));
+  /* Accessible star row from a 0–5 rating. */
+  const stars = (r) => {
+    const full = Math.round(r);
+    return "★★★★★".slice(0, full) + "☆☆☆☆☆".slice(0, 5 - full);
+  };
 
   /* Failsafe: always dismiss the loader, even if later init throws. */
   const hideLoader = () => { const l = document.getElementById("loader"); if (l) l.classList.add("is-done"); };
@@ -14,12 +24,19 @@
 
   /* ---------- DATA ---------- */
   const PRODUCTS = [
-    { id: "p1", name: "Signature Black", origin: "Chikmagalur, IN", cat: "signature", price: 449, was: 549, badge: "Bestseller", img: "assets/hero-bottle.png", desc: "The original. 16-hour steep, chocolate & cane sugar finish." },
-    { id: "p2", name: "Original", origin: "Coorg Estates, IN", cat: "signature", price: 399, was: 0, badge: "", img: "assets/product-original.png", desc: "Clean, balanced, endlessly drinkable. Our everyday hero." },
-    { id: "p3", name: "Madagascar Vanilla", origin: "Single Origin", cat: "flavoured", price: 469, was: 0, badge: "New", img: "assets/product-vanilla.png", desc: "Real bourbon vanilla folded into a slow cold steep." },
-    { id: "p4", name: "Dark Mocha", origin: "Araku Valley, IN", cat: "flavoured", price: 469, was: 0, badge: "", img: "assets/product-mocha.png", desc: "Single-origin cacao meets deep-roast cold brew." },
-    { id: "p5", name: "Founders' Case ×6", origin: "Mixed Selection", cat: "bundle", price: 2499, was: 2814, badge: "Save 11%", img: "assets/product-original.png", desc: "Six bottles, our four expressions. The full ROST flight." },
-    { id: "p6", name: "The Discovery Trio", origin: "3 × 250ml", cat: "bundle", price: 1199, was: 1317, badge: "Gift", img: "assets/product-mocha.png", desc: "One of each flavour. The perfect introduction." },
+    { id: "p1", name: "Signature Black", origin: "Chikmagalur, IN", cat: "signature", price: 449, was: 549, badge: "Bestseller", img: "assets/hero-bottle.png", desc: "The original. 16-hour steep, chocolate & cane sugar finish.", rating: 4.9, reviews: 842, size: "250 ml", caffeine: "180 mg", notes: ["Dark chocolate", "Cane sugar", "Smooth finish"] },
+    { id: "p2", name: "Original", origin: "Coorg Estates, IN", cat: "signature", price: 399, was: 0, badge: "", img: "assets/product-original.png", desc: "Clean, balanced, endlessly drinkable. Our everyday hero.", rating: 4.7, reviews: 514, size: "250 ml", caffeine: "165 mg", notes: ["Balanced", "Nutty", "Low acidity"] },
+    { id: "p3", name: "Madagascar Vanilla", origin: "Single Origin", cat: "flavoured", price: 469, was: 0, badge: "New", img: "assets/product-vanilla.png", desc: "Real bourbon vanilla folded into a slow cold steep.", rating: 4.8, reviews: 327, size: "250 ml", caffeine: "160 mg", notes: ["Bourbon vanilla", "Creamy", "Subtle sweetness"] },
+    { id: "p4", name: "Dark Mocha", origin: "Araku Valley, IN", cat: "flavoured", price: 469, was: 0, badge: "", img: "assets/product-mocha.png", desc: "Single-origin cacao meets deep-roast cold brew.", rating: 4.6, reviews: 289, size: "250 ml", caffeine: "170 mg", notes: ["Single-origin cacao", "Deep roast", "Velvety"] },
+    { id: "p5", name: "Founders' Case ×6", origin: "Mixed Selection", cat: "bundle", price: 2499, was: 2814, badge: "Save 11%", img: "assets/bundle-case6.png", desc: "Six bottles, our four expressions. The full ROST flight.", rating: 4.9, reviews: 196, size: "6 × 250 ml", caffeine: "Mixed", notes: ["All four expressions", "Best value", "Gift-ready"] },
+    { id: "p6", name: "The Discovery Trio", origin: "3 × 250ml", cat: "bundle", price: 1199, was: 1317, badge: "Gift", img: "assets/bundle-trio3.png", desc: "One of each flavour. The perfect introduction.", rating: 4.8, reviews: 134, size: "3 × 250 ml", caffeine: "Mixed", notes: ["Three flavours", "Perfect intro", "Gift-ready"] },
+  ];
+
+  const REVIEWS = [
+    { name: "Aarav M.", loc: "Bengaluru", rating: 5, text: "Genuinely the smoothest cold brew I've had in India. I drink it black now — never thought I would.", product: "Signature Black" },
+    { name: "Priya N.", loc: "Mumbai", rating: 5, text: "The subscription is the best decision I made this year. Arrives fresh, on time, every single month.", product: "Founders' Case ×6" },
+    { name: "Karthik R.", loc: "Hyderabad", rating: 5, text: "Madagascar Vanilla tastes like a dessert without the sugar crash. My whole office is hooked.", product: "Madagascar Vanilla" },
+    { name: "Sneha D.", loc: "Pune", rating: 4, text: "Premium feel from the bottle to the last sip. Delivery was quick and the packaging is gorgeous.", product: "The Discovery Trio" },
   ];
 
   const FOUNDERS = [
@@ -62,28 +79,73 @@
 
   function productCard(p) {
     const was = p.was ? `<small>${inr(p.was)}</small>` : "";
-    const badge = p.badge ? `<span class="card-badge">${p.badge}</span>` : "";
+    const badge = p.badge ? `<span class="card-badge">${esc(p.badge)}</span>` : "";
+    const rating = p.rating
+      ? `<div class="card-rate"><span class="stars" aria-hidden="true">${stars(p.rating)}</span><span class="card-rate-meta">${p.rating} (${p.reviews})</span></div>`
+      : "";
     return `
-    <article class="card reveal" data-cat="${p.cat}">
+    <article class="card reveal" data-cat="${esc(p.cat)}">
       <div class="card-media">
         ${badge}
         <button class="card-fav" data-fav aria-label="Save">♡</button>
-        <img src="${p.img}" alt="${p.name}" loading="lazy" />
+        <img src="${esc(p.img)}" alt="${esc(p.name)}" loading="lazy" />
+        <button class="card-quick" data-quick="${esc(p.id)}">Quick view</button>
       </div>
       <div class="card-body">
-        <span class="card-origin">${p.origin}</span>
-        <h3 class="card-name">${p.name}</h3>
-        <p class="card-desc">${p.desc}</p>
+        <span class="card-origin">${esc(p.origin)}</span>
+        <h3 class="card-name" data-quick="${esc(p.id)}">${esc(p.name)}</h3>
+        ${rating}
+        <p class="card-desc">${esc(p.desc)}</p>
         <div class="card-foot">
           <span class="card-price">${inr(p.price)} ${was}</span>
-          <div class="card-cta" data-cta="${p.id}">${ctaHTML(p.id)}</div>
+          <div class="card-cta" data-cta="${esc(p.id)}">${ctaHTML(p.id)}</div>
         </div>
       </div>
     </article>`;
   }
 
   $("#homeGrid").innerHTML = PRODUCTS.slice(0, 4).map(productCard).join("");
-  $("#catalogGrid").innerHTML = PRODUCTS.map(productCard).join("");
+
+  /* ---------- CATALOG: filter + search + sort ---------- */
+  const catalog = { filter: "all", query: "", sort: "featured" };
+  const SORTERS = {
+    "featured": null,
+    "price-asc": (a, b) => a.price - b.price,
+    "price-desc": (a, b) => b.price - a.price,
+    "rating": (a, b) => (b.rating || 0) - (a.rating || 0),
+    "name": (a, b) => a.name.localeCompare(b.name),
+  };
+  function renderCatalog() {
+    const grid = $("#catalogGrid"), empty = $("#catalogEmpty"), count = $("#catalogCount");
+    const q = catalog.query.trim().toLowerCase();
+    let list = PRODUCTS.filter(p => catalog.filter === "all" || p.cat === catalog.filter);
+    if (q) list = list.filter(p =>
+      [p.name, p.origin, p.desc, ...(p.notes || [])].join(" ").toLowerCase().includes(q)
+    );
+    const sorter = SORTERS[catalog.sort];
+    if (sorter) list = [...list].sort(sorter);
+
+    grid.innerHTML = list.map(productCard).join("");
+    $$("#catalogGrid .card").forEach(c => c.classList.add("in"));
+    empty.hidden = list.length > 0;
+    grid.hidden = list.length === 0;
+    count.textContent = list.length
+      ? `${list.length} ${list.length === 1 ? "brew" : "brews"}${q ? ` for “${catalog.query.trim()}”` : ""}`
+      : "";
+    updateCardCtas();
+  }
+  renderCatalog();
+
+  $("#reviewGrid").innerHTML = REVIEWS.map(r => `
+    <article class="review reveal">
+      <span class="stars" aria-label="${r.rating} out of 5">${stars(r.rating)}</span>
+      <p class="review-text">${esc(r.text)}</p>
+      <div class="review-by">
+        <strong>${esc(r.name)}</strong>
+        <span>${esc(r.loc)} · ${esc(r.product)}</span>
+      </div>
+    </article>`).join("");
+  $("#rsStars").textContent = stars(5);
 
   $("#founderGrid").innerHTML = FOUNDERS.map(f => `
     <article class="founder reveal">
@@ -135,6 +197,31 @@
      ============================================================ */
   const cartEl = $("#cart"), overlay = $("#overlay");
   const FREE_SHIP = 2999;
+  const CART_KEY = "rost-cart";
+
+  /* Persist only {id, qty}. On load we re-hydrate price/name/img from
+     PRODUCTS, so tampered localStorage can never inject a fake price or
+     markup into the cart. */
+  function saveCart() {
+    try {
+      localStorage.setItem(CART_KEY, JSON.stringify(cart.map(i => ({ id: i.id, qty: i.qty }))));
+    } catch (_) {}
+  }
+  function loadCart() {
+    let raw;
+    try { raw = JSON.parse(localStorage.getItem(CART_KEY) || "[]"); } catch (_) { return; }
+    if (!Array.isArray(raw)) return;
+    const rebuilt = [];
+    raw.forEach(entry => {
+      if (!entry || typeof entry !== "object") return;
+      const p = PRODUCTS.find(x => x.id === entry.id);
+      const qty = Math.floor(Number(entry.qty));
+      if (p && Number.isFinite(qty) && qty > 0 && !rebuilt.some(i => i.id === p.id)) {
+        rebuilt.push({ ...p, qty: Math.min(qty, 99) });
+      }
+    });
+    cart = rebuilt;
+  }
 
   function openCart() { cartEl.classList.add("open"); overlay.classList.add("show"); cartEl.setAttribute("aria-hidden","false"); }
   function closeCart() { cartEl.classList.remove("open"); overlay.classList.remove("show"); cartEl.setAttribute("aria-hidden","true"); }
@@ -143,16 +230,16 @@
     const p = PRODUCTS.find(x => x.id === id); if (!p) return;
     if (btn) burstBeans(btn);
     const line = cart.find(i => i.id === id);
-    if (line) line.qty++; else cart.push({ ...p, qty: 1 });
-    renderCart();
+    if (line) line.qty = Math.min(line.qty + 1, 99); else cart.push({ ...p, qty: 1 });
+    renderCart(); saveCart();
     bounceCount();
     toast(`${p.name} added to bag`);
   }
   function changeQty(id, d) {
     const line = cart.find(i => i.id === id); if (!line) return;
-    line.qty += d;
+    line.qty = Math.min(line.qty + d, 99);
     if (line.qty <= 0) cart = cart.filter(i => i.id !== id);
-    renderCart();
+    renderCart(); saveCart();
   }
   function renderCart() {
     const count = cart.reduce((s, i) => s + i.qty, 0);
@@ -171,16 +258,16 @@
 
     $("#cartItems").innerHTML = cart.map(i => `
       <div class="cart-item">
-        <img src="${i.img}" alt="${i.name}" />
+        <img src="${esc(i.img)}" alt="${esc(i.name)}" />
         <div>
-          <div class="ci-name">${i.name}</div>
+          <div class="ci-name">${esc(i.name)}</div>
           <div class="ci-price">${inr(i.price)}</div>
           <div class="qty">
-            <button data-dec="${i.id}">−</button>
+            <button data-dec="${esc(i.id)}" aria-label="Remove one">−</button>
             <span>${i.qty}</span>
-            <button data-inc="${i.id}">+</button>
+            <button data-inc="${esc(i.id)}" aria-label="Add one">+</button>
           </div>
-          <button class="ci-remove" data-rm="${i.id}">Remove</button>
+          <button class="ci-remove" data-rm="${esc(i.id)}">Remove</button>
         </div>
         <strong>${inr(i.price * i.qty)}</strong>
       </div>`).join("");
@@ -193,7 +280,8 @@
     if (add) { addToCart(add.dataset.add, add); return; }
     const inc = e.target.closest("[data-inc]"); if (inc) return changeQty(inc.dataset.inc, 1);
     const dec = e.target.closest("[data-dec]"); if (dec) return changeQty(dec.dataset.dec, -1);
-    const rm = e.target.closest("[data-rm]"); if (rm) { cart = cart.filter(i => i.id !== rm.dataset.rm); renderCart(); return; }
+    const rm = e.target.closest("[data-rm]"); if (rm) { cart = cart.filter(i => i.id !== rm.dataset.rm); renderCart(); saveCart(); return; }
+    const quick = e.target.closest("[data-quick]"); if (quick) { openQuick(quick.dataset.quick); return; }
     const fav = e.target.closest("[data-fav]"); if (fav) { fav.textContent = fav.textContent === "♡" ? "♥" : "♡"; fav.style.color = fav.textContent === "♥" ? "var(--copper)" : ""; }
   });
   $("#cartBtn").onclick = openCart;
@@ -203,7 +291,7 @@
     if (!cart.length) return;
     if (!user) { closeCart(); openAuth(); toast("Sign in to complete checkout"); return; }
     toast(voucherClaimed ? "Order placed — ROST100 (10% off) applied ✦" : "Order placed — confirmation on its way ✦");
-    cart = []; renderCart(); closeCart();
+    cart = []; renderCart(); saveCart(); closeCart();
   };
 
   /* ============================================================
@@ -213,11 +301,70 @@
     const chip = e.target.closest(".chip"); if (!chip) return;
     $$(".chip").forEach(c => c.classList.remove("is-active"));
     chip.classList.add("is-active");
-    const f = chip.dataset.filter;
-    $$("#catalogGrid .card").forEach(card => {
-      card.style.display = (f === "all" || card.dataset.cat === f) ? "" : "none";
-    });
+    catalog.filter = chip.dataset.filter;
+    renderCatalog();
   });
+
+  const searchInput = $("#catalogSearch"), searchClear = $("#searchClear");
+  searchInput.addEventListener("input", () => {
+    catalog.query = searchInput.value;
+    searchClear.hidden = !searchInput.value;
+    renderCatalog();
+  });
+  searchClear.addEventListener("click", () => {
+    searchInput.value = ""; catalog.query = ""; searchClear.hidden = true;
+    renderCatalog(); searchInput.focus();
+  });
+  $("#catalogSort").addEventListener("change", (e) => {
+    catalog.sort = e.target.value;
+    renderCatalog();
+  });
+  $("#catalogReset").addEventListener("click", () => {
+    catalog.filter = "all"; catalog.query = ""; catalog.sort = "featured";
+    searchInput.value = ""; searchClear.hidden = true;
+    $("#catalogSort").value = "featured";
+    $$(".chip").forEach(c => c.classList.toggle("is-active", c.dataset.filter === "all"));
+    renderCatalog();
+  });
+
+  /* ============================================================
+     QUICK VIEW
+     ============================================================ */
+  const quickModal = $("#quickModal");
+  let lastFocus = null;
+  function openQuick(id) {
+    const p = PRODUCTS.find(x => x.id === id); if (!p) return;
+    lastFocus = document.activeElement;
+    $("#qvImg").src = p.img;
+    $("#qvImg").alt = p.name;
+    const badge = $("#qvBadge");
+    badge.hidden = !p.badge;
+    badge.textContent = p.badge || "";
+    $("#qvOrigin").textContent = p.origin;
+    $("#qvName").textContent = p.name;
+    $("#qvDesc").textContent = p.desc;
+    $("#qvStars").textContent = stars(p.rating || 0);
+    $("#qvReviews").textContent = p.rating ? `${p.rating} · ${p.reviews} reviews` : "";
+    $("#qvNotes").innerHTML = (p.notes || []).map(n => `<li>${esc(n)}</li>`).join("");
+    $("#qvSpecs").innerHTML = `
+      <div class="spec"><span class="k">Size</span><span class="v">${esc(p.size || "—")}</span></div>
+      <div class="spec"><span class="k">Caffeine</span><span class="v">${esc(p.caffeine || "—")}</span></div>
+      <div class="spec"><span class="k">Steep</span><span class="v">16 hours</span></div>`;
+    $("#qvPrice").innerHTML = `${inr(p.price)} ${p.was ? `<small>${inr(p.was)}</small>` : ""}`;
+    const cta = $("#qvCta");
+    cta.dataset.cta = p.id;
+    cta.innerHTML = ctaHTML(p.id);
+    quickModal.classList.add("show");
+    quickModal.setAttribute("aria-hidden", "false");
+    $("#quickClose").focus();
+  }
+  function closeQuick() {
+    quickModal.classList.remove("show");
+    quickModal.setAttribute("aria-hidden", "true");
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  $("#quickClose").onclick = closeQuick;
+  quickModal.addEventListener("click", (e) => { if (e.target === quickModal) closeQuick(); });
 
   /* ============================================================
      AUTH
@@ -314,6 +461,26 @@
     e.preventDefault();
     toast("You're in. Welcome to the inner circle ✦");
     e.target.reset();
+  });
+
+  /* ============================================================
+     PINCODE DELIVERY CHECK
+     ============================================================ */
+  const pinInput = $("#pincodeInput"), pinMsg = $("#pincodeMsg");
+  pinInput.addEventListener("input", () => {
+    pinInput.value = pinInput.value.replace(/\D/g, "").slice(0, 6);
+  });
+  $("#pincodeForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const pin = pinInput.value.trim();
+    if (!/^[1-9]\d{5}$/.test(pin)) {
+      pinMsg.className = "pincode-msg err";
+      pinMsg.textContent = "Enter a valid 6-digit Indian pincode.";
+      return;
+    }
+    const eta = 2 + (Number(pin) % 3);
+    pinMsg.className = "pincode-msg ok";
+    pinMsg.textContent = `✦ Delivers to ${pin} in ${eta}–${eta + 1} days · COD available`;
   });
 
   /* ============================================================
@@ -488,6 +655,8 @@
      ============================================================ */
   const voucherEl = $("#voucherModal"), voucherCard = $("#voucherCard");
   let voucherClaimed = false;
+  // Reward assembled at runtime (not present as a literal in markup/source).
+  const reward = () => [82, 79, 83, 84, 49, 48, 48].map(c => String.fromCharCode(c)).join("");
   function showVoucher() { voucherEl.classList.add("show"); voucherEl.setAttribute("aria-hidden", "false"); }
   function dismissVoucher() {
     voucherEl.classList.remove("show"); voucherEl.setAttribute("aria-hidden", "true");
@@ -499,13 +668,14 @@
     if (label) label.classList.add("loading");
     setTimeout(() => {
       if (label) label.classList.remove("loading");
+      $("#voucherCode").textContent = reward();
       voucherCard.classList.add("is-flipped");
       voucherClaimed = true;
       try { localStorage.setItem("rost-voucher", "claimed"); } catch (_) {}
     }, 900);
   });
   $("#voucherCopy").onclick = () => {
-    const code = $("#voucherCode").textContent.trim();
+    const code = reward();
     if (navigator.clipboard) navigator.clipboard.writeText(code).catch(() => {});
     $("#voucherCopy").textContent = "Copied ✓";
     toast(`Code ${code} copied`);
@@ -516,15 +686,39 @@
   voucherEl.addEventListener("click", (e) => { if (e.target === voucherEl) dismissVoucher(); });
 
   /* ============================================================
+     CASUAL-INSPECTION DETERRENTS
+     NOTE: these only deter casual users. Client-side HTML/CSS/JS and
+     images are always retrievable by a determined visitor. Real
+     secrecy requires a server (see README).
+     ============================================================ */
+  document.addEventListener("contextmenu", (e) => e.preventDefault());
+  document.addEventListener("dragstart", (e) => { if (e.target.tagName === "IMG") e.preventDefault(); });
+  document.addEventListener("keydown", (e) => {
+    const k = (e.key || "").toLowerCase();
+    const devCombo =
+      e.key === "F12" ||
+      ((e.ctrlKey || e.metaKey) && e.shiftKey && (k === "i" || k === "j" || k === "c")) ||
+      ((e.ctrlKey || e.metaKey) && k === "u") ||
+      (e.metaKey && e.altKey && (k === "i" || k === "j" || k === "c" || k === "u"));
+    if (devCombo) { e.preventDefault(); e.stopPropagation(); return false; }
+  });
+  try {
+    const s = "color:#d98a52;font:600 16px Manrope,sans-serif";
+    console.log("%cROST.coffee", s);
+    console.log("%cNothing to see here. Brewed with care.", "color:#a39a90");
+  } catch (_) {}
+
+  /* ============================================================
      KEYBOARD
      ============================================================ */
-  addEventListener("keydown", (e) => { if (e.key === "Escape") { closeCart(); closeAuth(); closeMenu(); dismissVoucher(); } });
+  addEventListener("keydown", (e) => { if (e.key === "Escape") { closeCart(); closeAuth(); closeMenu(); dismissVoucher(); closeQuick(); } });
 
   /* ============================================================
      INIT
      ============================================================ */
   const startPage = (location.hash || "#home").slice(1);
   if (["home","products","founders","account"].includes(startPage)) go(startPage);
+  loadCart();
   renderCart();
   observeReveals();
   onScroll();
